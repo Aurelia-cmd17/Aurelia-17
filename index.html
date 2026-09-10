@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AURELIA-17</title>
+  <style>
+    :root { --bg:#050505; --fg:#e8e8e8; --muted:#777; }
+    * { box-sizing:border-box; }
+    body {
+      margin:0; min-height:100vh; background:var(--bg); color:var(--fg);
+      font-family: "Courier New", monospace; display:grid; place-items:center;
+    }
+    main { width:min(720px, 90vw); text-align:center; }
+    .sig { color:var(--muted); letter-spacing:.25em; font-size:.75rem; }
+    h1 { font-size:clamp(2rem,8vw,4.5rem); letter-spacing:.18em; margin:.4em 0; }
+    p { line-height:1.7; }
+    .cipher {
+      margin:2rem auto; padding:1.25rem; border:1px solid #333;
+      background:#0b0b0b; word-break:break-all; letter-spacing:.12em;
+    }
+    input, button {
+      font:inherit; background:#080808; color:var(--fg);
+      border:1px solid #444; padding:.75rem;
+    }
+    input { width:min(360px,80vw); }
+    button { cursor:pointer; margin-left:.4rem; }
+    #result { min-height:1.5em; margin-top:1rem; }
+    .hidden { display:none; }
+    footer { margin-top:3rem; color:var(--muted); font-size:.7rem; }
+  </style>
+</head>
+<body>
+<main>
+  <div class="sig">AURELIA-17 // ARCHIVE 01</div>
+  <h1>WE ARE LOOKING.</h1>
+  <p>Not for followers.<br>Not for answers handed to you.</p>
+  <p>We are looking for those who notice what everyone else ignores.</p>
+
+  <div class="cipher">
+    53 74 61 72 74 20 68 65 72 65
+  </div>
+
+  <p>Something is hidden in plain sight.</p>
+  <p>Decode the sequence.</p>
+
+  <form id="form">
+    <input id="answer" autocomplete="off" placeholder="enter answer">
+    <button type="submit">SUBMIT</button>
+  </form>
+  <div id="result" aria-live="polite"></div>
+
+  <footer>AURELIA-17 • NO DATA IS COLLECTED</footer>
+</main>
+
+<script>
+  document.getElementById("form").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const answer = document.getElementById("answer").value.trim().toLowerCase();
+    const result = document.getElementById("result");
+
+    if (answer === "start here") {
+      result.textContent = "CORRECT. The next clue is closer than you think.";
+    } else {
+      result.textContent = "INCORRECT.";
+    }
+  });
+</script>
+</body>
+</html>
