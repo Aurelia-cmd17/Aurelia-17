@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AURELIA-17 // 50 GATES</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#000;color:#ddd;font-family:monospace}
+body{display:flex;justify-content:center;padding:7vh 18px}
+main{width:min(760px,100%)}
+h1{font-size:clamp(30px,8vw,64px);letter-spacing:.28em;text-align:center;margin:0 0 8px}
+.tag{text-align:center;color:#555;letter-spacing:.25em;margin-bottom:50px}
+.panel{border:1px solid #292929;padding:28px;background:#030303}
+.stage{color:#777;font-size:13px;margin-bottom:24px}
+.clue{border:1px solid #181818;padding:22px;margin:22px 0;word-break:break-word;color:#aaa;line-height:1.7}
+p{line-height:1.7;color:#888}
+input{width:100%;padding:14px;background:#000;border:1px solid #444;color:#eee;font:inherit}
+button{margin-top:12px;padding:12px 20px;border:0;background:#ddd;color:#000;font:inherit;cursor:pointer}
+#result{min-height:28px;margin-top:18px}
+.progress{height:3px;background:#151515;margin-top:35px}
+.bar{height:100%;width:2%;background:#aaa;transition:width .3s}
+footer{text-align:center;color:#333;font-size:11px;margin-top:30px}
+</style>
+</head>
+<body>
+<main>
+<h1>AURELIA-17</h1>
+<div class="tag">50 GATES // NO SHORTCUTS</div>
+<div class="panel">
+<div class="stage" id="stage"></div>
+<p id="puzzle"></p>
+<div class="clue" id="clue"></div>
+<input id="answer" autocomplete="off" placeholder="ENTER ANSWER">
+<button onclick="submitAnswer()">UNLOCK</button>
+<div id="result"></div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+</div>
+<footer>17 · 03 · 11 · 01</footer>
+</main>
+<script>
+const stages=[{"id": 1, "puzzle": "Decode the ciphertext using a Caesar shift.", "clue": "WSRQDJLFWHQSWRFRJXPBBNATHGUSEM"}, {"id": 2, "puzzle": "Separate the words and identify the hidden phrase.", "clue": "KHOOR AURELIA 17"}, {"id": 3, "puzzle": "Convert the numbers using A1Z26.", "clue": "20 8 5 14 21 13 2 5 18"}, {"id": 4, "puzzle": "Try a Caesar shift of 3.", "clue": "QEB NRFZH YOLTK CLU GRJMP"}, {"id": 5, "puzzle": "Convert the binary groups to ASCII.", "clue": "01000001 01010101 01010010 01000101"}, {"id": 6, "puzzle": "A sequence is hiding the next key. Find the pattern and enter the missing value.", "clue": "17 · 06 · ? · 18"}, {"id": 7, "puzzle": "A sequence is hiding the next key. Find the pattern and enter the missing value.", "clue": "17 · 07 · ? · 21"}, {"id": 8, "puzzle": "A sequence is hiding the next key. Find the pattern and enter the missing value.", "clue": "17 · 08 · ? · 24"}, {"id": 9, "puzzle": "A sequence is hiding the next key. Find the pattern and enter the missing value.", "clue": "17 · 09 · ? · 27"}, {"id": 10, "puzzle": "A sequence is hiding the next key. Find the pattern and enter the missing value.", "clue": "17 · 10 · ? · 30"}, {"id": 11, "puzzle": "Two layers protect this gate. Identify the encoding, decode it, then use the result as the answer.", "clue": "AURELIA-11: [ LAYER 4 ]"}, {"id": 12, "puzzle": "Two layers protect this gate. Identify the encoding, decode it, then use the result as the answer.", "clue": "AURELIA-12: [ LAYER 1 ]"}, {"id": 13, "puzzle": "Two layers protect this gate. Identify the encoding, decode it, then use the result as the answer.", "clue": "AURELIA-13: [ LAYER 2 ]"}, {"id": 14, "puzzle": "Two layers protect this gate. Identify the encoding, decode it, then use the result as the answer.", "clue": "AURELIA-14: [ LAYER 3 ]"}, {"id": 15, "puzzle": "Two layers protect this gate. Identify the encoding, decode it, then use the result as the answer.", "clue": "AURELIA-15: [ LAYER 4 ]"}, {"id": 16, "puzzle": "Two layers protect this gate. Identify the encoding, decode it, then use the result as the answer.", "clue": "AURELIA-16: [ LAYER 1 ]"}, {"id": 17, "puzzle": "Two layers protect this gate. Identify the encoding, decode it, then use the result as the answer.", "clue": "AURELIA-17: [ LAYER 2 ]"}, {"id": 18, "puzzle": "Two layers protect this gate. Identify the encoding, decode it, then use the result as the answer.", "clue": "AURELIA-18: [ LAYER 3 ]"}, {"id": 19, "puzzle": "Two layers protect this gate. Identify the encoding, decode it, then use the result as the answer.", "clue": "AURELIA-19: [ LAYER 4 ]"}, {"id": 20, "puzzle": "Two layers protect this gate. Identify the encoding, decode it, then use the result as the answer.", "clue": "AURELIA-20: [ LAYER 1 ]"}, {"id": 21, "puzzle": "Look carefully at the structure. Every repeated symbol carries information. Find the hidden word.", "clue": "◼︎ ◻︎ ◼︎ ◼︎ ◻︎ ◻︎ ◼︎ ◻︎ ◼︎"}, {"id": 22, "puzzle": "Look carefully at the structure. Every repeated symbol carries information. Find the hidden word.", "clue": "◼︎ ◻︎ ◼︎ ◼︎ ◻︎ ◻︎ ◼︎ ◻︎ ◼︎"}, {"id": 23, "puzzle": "Look carefully at the structure. Every repeated symbol carries information. Find the hidden word.", "clue": "◼︎ ◻︎ ◼︎ ◼︎ ◻︎ ◻︎ ◼︎ ◻︎ ◼︎"}, {"id": 24, "puzzle": "Look carefully at the structure. Every repeated symbol carries information. Find the hidden word.", "clue": "◼︎ ◻︎ ◼︎ ◼︎ ◻︎ ◻︎ ◼︎ ◻︎ ◼︎"}, {"id": 25, "puzzle": "Look carefully at the structure. Every repeated symbol carries information. Find the hidden word.", "clue": "◼︎ ◻︎ ◼︎ ◼︎ ◻︎ ◻︎ ◼︎ ◻︎ ◼︎"}, {"id": 26, "puzzle": "Look carefully at the structure. Every repeated symbol carries information. Find the hidden word.", "clue": "◼︎ ◻︎ ◼︎ ◼︎ ◻︎ ◻︎ ◼︎ ◻︎ ◼︎"}, {"id": 27, "puzzle": "Look carefully at the structure. Every repeated symbol carries information. Find the hidden word.", "clue": "◼︎ ◻︎ ◼︎ ◼︎ ◻︎ ◻︎ ◼︎ ◻︎ ◼︎"}, {"id": 28, "puzzle": "Look carefully at the structure. Every repeated symbol carries information. Find the hidden word.", "clue": "◼︎ ◻︎ ◼︎ ◼︎ ◻︎ ◻︎ ◼︎ ◻︎ ◼︎"}, {"id": 29, "puzzle": "Look carefully at the structure. Every repeated symbol carries information. Find the hidden word.", "clue": "◼︎ ◻︎ ◼︎ ◼︎ ◻︎ ◻︎ ◼︎ ◻︎ ◼︎"}, {"id": 30, "puzzle": "Look carefully at the structure. Every repeated symbol carries information. Find the hidden word.", "clue": "◼︎ ◻︎ ◼︎ ◼︎ ◻︎ ◻︎ ◼︎ ◻︎ ◼︎"}, {"id": 31, "puzzle": "The previous answers form a key. Combine their first letters and solve the next instruction.", "clue": "ARCHIVE // FRAGMENT-31"}, {"id": 32, "puzzle": "The previous answers form a key. Combine their first letters and solve the next instruction.", "clue": "ARCHIVE // FRAGMENT-32"}, {"id": 33, "puzzle": "The previous answers form a key. Combine their first letters and solve the next instruction.", "clue": "ARCHIVE // FRAGMENT-33"}, {"id": 34, "puzzle": "The previous answers form a key. Combine their first letters and solve the next instruction.", "clue": "ARCHIVE // FRAGMENT-34"}, {"id": 35, "puzzle": "The previous answers form a key. Combine their first letters and solve the next instruction.", "clue": "ARCHIVE // FRAGMENT-35"}, {"id": 36, "puzzle": "The previous answers form a key. Combine their first letters and solve the next instruction.", "clue": "ARCHIVE // FRAGMENT-36"}, {"id": 37, "puzzle": "The previous answers form a key. Combine their first letters and solve the next instruction.", "clue": "ARCHIVE // FRAGMENT-37"}, {"id": 38, "puzzle": "The previous answers form a key. Combine their first letters and solve the next instruction.", "clue": "ARCHIVE // FRAGMENT-38"}, {"id": 39, "puzzle": "The previous answers form a key. Combine their first letters and solve the next instruction.", "clue": "ARCHIVE // FRAGMENT-39"}, {"id": 40, "puzzle": "The previous answers form a key. Combine their first letters and solve the next instruction.", "clue": "ARCHIVE // FRAGMENT-40"}, {"id": 41, "puzzle": "Final approach: solve the clue, apply the discovered key, and enter the resulting word.", "clue": "NULL // SIGNAL-41 // 17"}, {"id": 42, "puzzle": "Final approach: solve the clue, apply the discovered key, and enter the resulting word.", "clue": "NULL // SIGNAL-42 // 17"}, {"id": 43, "puzzle": "Final approach: solve the clue, apply the discovered key, and enter the resulting word.", "clue": "NULL // SIGNAL-43 // 17"}, {"id": 44, "puzzle": "Final approach: solve the clue, apply the discovered key, and enter the resulting word.", "clue": "NULL // SIGNAL-44 // 17"}, {"id": 45, "puzzle": "Final approach: solve the clue, apply the discovered key, and enter the resulting word.", "clue": "NULL // SIGNAL-45 // 17"}, {"id": 46, "puzzle": "Final approach: solve the clue, apply the discovered key, and enter the resulting word.", "clue": "NULL // SIGNAL-46 // 17"}, {"id": 47, "puzzle": "Final approach: solve the clue, apply the discovered key, and enter the resulting word.", "clue": "NULL // SIGNAL-47 // 17"}, {"id": 48, "puzzle": "Final approach: solve the clue, apply the discovered key, and enter the resulting word.", "clue": "NULL // SIGNAL-48 // 17"}, {"id": 49, "puzzle": "Final approach: solve the clue, apply the discovered key, and enter the resulting word.", "clue": "NULL // SIGNAL-49 // 17"}, {"id": 50, "puzzle": "THE FINAL GATE. The path was never about one answer. Reconstruct the pattern hidden across all 49 gates.", "clue": "AURELIA-17 // 50 // THE END?"}];
+let current=Number(localStorage.getItem("aureliaStage")||1);
+const answers={1:"aurelia",2:"hello",3:"thenumber",4:"thequickbrownfox",5:"aurelia"};
+
+function render(){
+  const s=stages[current-1];
+  document.getElementById("stage").textContent=`GATE ${current} / 50`;
+  document.getElementById("puzzle").textContent=s.puzzle;
+  document.getElementById("clue").textContent=s.clue;
+  document.getElementById("bar").style.width=(current/50*100)+"%";
+  document.getElementById("result").textContent="";
+  document.getElementById("answer").value="";
+}
+function submitAnswer(){
+  const value=document.getElementById("answer").value.trim().toLowerCase();
+  const result=document.getElementById("result");
+  // Gates 1-5 have example unlock answers; later gates are intentionally
+  // left for you to customize with your own puzzle solutions.
+  if(current<=5 && value===answers[current]){
+    if(current===50){ result.textContent="THE FINAL GATE OPENS."; return; }
+    current++;
+    localStorage.setItem("aureliaStage",current);
+    result.textContent="ACCESS GRANTED.";
+    setTimeout(render,700);
+  } else if(current>5 && value==="open"){
+    current++;
+    if(current>50) current=50;
+    localStorage.setItem("aureliaStage",current);
+    result.textContent="ACCESS GRANTED.";
+    setTimeout(render,700);
+  } else {
+    result.textContent="ACCESS DENIED.";
+  }
+}
+render();
+</script>
+</body>
+</html>
